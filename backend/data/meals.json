@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Chicken Salad",
+    "category": "healthy",
+    "protein": 30,
+    "fat": 8,
+    "sugar": 5
+  },
+  {
+    "id": 2,
+    "name": "Turkey Rice Bowl",
+    "category": "high protein",
+    "protein": 38,
+    "fat": 10,
+    "sugar": 4
+  },
+  {
+    "id": 3,
+    "name": "Vegetable Stir Fry",
+    "category": "vegetarian",
+    "protein": 14,
+    "fat": 7,
+    "sugar": 9
+  },
+  {
+    "id": 4,
+    "name": "Greek Yogurt Parfait",
+    "category": "breakfast",
+    "protein": 22,
+    "fat": 6,
+    "sugar": 14
+  },
+  {
+    "id": 5,
+    "name": "Salmon with Sweet Potato",
+    "category": "healthy",
+    "protein": 34,
+    "fat": 16,
+    "sugar": 7
+  }
+]
