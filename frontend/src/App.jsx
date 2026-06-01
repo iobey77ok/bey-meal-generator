@@ -15,6 +15,8 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   // show an error message if the backend request fails.
   const [error, setError] = useState("");
+  // tracks whether the meal image has loaded, to show loading state until then.
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // called when the user clicks the "Generate Meal" button.
   // async means the function can wait for slow things, like API requests.
@@ -35,8 +37,12 @@ function App() {
 
       // Convert backend JSON response into JavaScript object.
       const data = await response.json();
+      // When new meal is generated, reset image loaded state to show loading until new image loads.
+      setImageLoaded(false);
       // Save meal into React state. This makes React redraw the page.
       setMeal(data);
+
+
       // If anything failed, clear meal and show error.
     } catch (requestError) {
       setMeal(null);
@@ -64,12 +70,30 @@ function App() {
 
         {error && <p className="error">{error}</p>}
 
+        {isLoading && (
+          <div className="loading-panel">
+            <div className="spinner"></div>
+            <p>Generating meal...</p>
+          </div>
+        )}
+
         {/* if meal has data, show meal result */}
-        {meal && (
+        {meal && !isLoading && (
           <div className="meal-result">
-            <img src={meal.image} alt={meal.name} className="meal-image" />
-            <h2>{meal.name}</h2>
-            <p className="category">{meal.category}</p>
+            <img
+              src={meal.image}
+              alt={meal.name}
+              className="meal-image"
+              onLoad={() => setImageLoaded(true)}
+            />
+
+            {/* Only show meal name and category after image has loaded, to avoid layout shift.*/}
+            {imageLoaded && (
+              <>
+                <h2>{meal.name}</h2>
+                <p className="category">{meal.category}</p>
+              </>
+            )}
 
             <dl className="nutrition-list">
               <div>
