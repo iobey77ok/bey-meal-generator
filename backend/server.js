@@ -49,21 +49,21 @@ Random Meal Route
 */
 app.get("/meal/random", async (request, response) => {
   try {
-    // reads meals.json.
-    const mealsFile = await readFile(mealsFilePath, "utf8");
-    // Turns JSON text into JavaScript array.
-    const meals = JSON.parse(mealsFile);
+    const apiResponse = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/random.php"
+    );
+    const apiData = await apiResponse.json();
+    const meal = apiData.meals[0];
 
-    if (!Array.isArray(meals) || meals.length === 0) {
-      return response.status(500).json({ error: "No meals are available." });
-    }
-
-    // Chooses random position in the array.
-    const randomIndex = Math.floor(Math.random() * meals.length);
-    // Gets that meal.
-    const randomMeal = meals[randomIndex];
-    // Sends the meal back to frontend as JSON.
-    response.json(randomMeal);
+    response.json({
+      id: meal.idMeal,
+      name: meal.strMeal,
+      category: meal.strCategory,
+      image: meal.strMealThumb,
+      protein: "-",
+      fat: "-",
+      sugar: "-"
+    });
 
 
     // If reading file fails, backend sends error response.

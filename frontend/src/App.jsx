@@ -67,21 +67,22 @@ function App() {
         {/* if meal has data, show meal result */}
         {meal && (
           <div className="meal-result">
+            <img src={meal.image} alt={meal.name} className="meal-image" />
             <h2>{meal.name}</h2>
             <p className="category">{meal.category}</p>
 
             <dl className="nutrition-list">
               <div>
                 <dt>Protein</dt>
-                <dd>{meal.protein}g</dd>
+                <dd>{meal.protein}</dd>
               </div>
               <div>
                 <dt>Fat</dt>
-                <dd>{meal.fat}g</dd>
+                <dd>{meal.fat}</dd>
               </div>
               <div>
                 <dt>Sugar</dt>
-                <dd>{meal.sugar}g</dd>
+                <dd>{meal.sugar}</dd>
               </div>
             </dl>
           </div>

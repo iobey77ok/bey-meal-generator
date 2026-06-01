@@ -41,6 +41,14 @@ button:disabled {
   box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
 }
 
+.meal-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: #2563eb;
