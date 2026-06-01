@@ -1,3 +1,5 @@
+/* webpage logic/UI */
+
 import { useState } from "react";
 
 const API_URL = "http://localhost:3000/meal/random";
@@ -33,7 +35,7 @@ function App() {
     <main className="app">
       <section className="meal-panel" aria-labelledby="page-title">
         <p className="eyebrow">Meal Generator</p>
-        <h1 id="page-title">Find a random meal</h1>
+        <h1 id="page-title">Find a random meal </h1>
         <p className="intro">
           Click the button to request one meal from the Express API.
         </p>
