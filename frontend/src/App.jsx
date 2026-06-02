@@ -2,11 +2,22 @@
 
 import { useState } from "react";
 
-// send requests to this URL to get random meals from backend.
+// The base URL for our backend API. Kept outside the component because it's a global constant.
 const API_URL = "http://localhost:3000/meal/random";
 
+/**
+ * DATA NORMALIZER: Standardizes the meal data format.
+ * * Why we need this: 
+ * Our app gets data from two places: our local JSON file (uses 'name', 'image') 
+ * and TheMealDB API (uses 'strMeal', 'strMealThumb'). 
+ * * This function translates both styles into a single, reliable object structure 
+ * so our frontend UI code stays clean and never breaks due to missing fields.
+ */
 function normalizeMeal(data) {
   return {
+    // Read this as: Use data.id if it exists. 
+    // If not, try data.idMeal. 
+    // If that doesn't exist either, fall back to an empty string "".
     id: data.id ?? data.idMeal ?? "",
     name: data.name ?? data.strMeal ?? "Unknown meal",
     category: data.category ?? data.strCategory ?? "",
@@ -22,62 +33,72 @@ function normalizeMeal(data) {
 }
 
 function App() {
-  /*
-  meal stores the meal data from backend.
-  setMeal(...) updates it.
-  */
+  // Core Data States
   const [meal, setMeal] = useState(null);
-  // tracks whether the app is waiting for a response from the backend.
-  const [isLoading, setIsLoading] = useState(false);
-  // show an error message if the backend request fails.
   const [error, setError] = useState("");
-  // tracks whether the meal image has loaded, to show loading state until then.
+
+  /**
+   * SOLID Design Principle: UI Status State Machine
+   * Instead of multiple booleans (isLoading, isError) which can conflict, we use a single string.
+   * Allowed values: 'idle' (welcome screen), 'loading', 'error', 'success'.
+   */
+  const [status, setStatus] = useState("idle");
+
+  // Tracks visual state of the image asset specifically
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  // called when the user clicks the "Generate Meal" button.
-  // async means the function can wait for slow things, like API requests.
+  /**
+   * Orchestrates the API workflow. 
+   * Designed to be highly extensible: if you want to support filters or searches later,
+   * you can easily add parameters to this function.
+   */
   async function handleGenerateMeal() {
-    // show loading state and clear any previous error message.
-    setIsLoading(true);
+    setStatus("loading");
     setError("");
 
     try {
-      // fetch() sends an HTTP request to Express backend. -> GET /meal/random
-      //    await means wait until backend replies.
       const response = await fetch(API_URL);
 
-      // If backend fails, create an error.
       if (!response.ok) {
         throw new Error("The server could not generate a meal.");
       }
 
-      // Convert backend JSON response into JavaScript object.
       const data = await response.json();
-      // When new meal is generated, reset image loaded state to show loading until new image loads.
-      setImageLoaded(false);
-      // Save meal into React state. This makes React redraw the page.
-      setMeal(data);
 
-
-      // If anything failed, clear meal and show error.
+      setImageLoaded(false); // Reset image visibility trigger for the new asset
+      setMeal(normalizeMeal(data)); // Normalize ensures the object shape matches expectations perfectly
+      setStatus("success");
     } catch (requestError) {
       setMeal(null);
-      setError(err.message || "Something went wrong.");
-      // Stop loading, whether success or error.
-    } finally {
-      setIsLoading(false);
+      setError(requestError.message || "Something went wrong.");
+      setStatus("error");
     }
   }
 
-  // the UI that React shows. CSS decorates it.
+  /**
+   * Clear all states to cleanly reset the view machine back to the homepage.
+   */
+  function handleGoHome() {
+    setMeal(null);
+    setError("");
+    setImageLoaded(false);
+    setStatus("idle");
+  }
+
+  // Convenient derived flags to keep our JSX clean and highly readable
+  const isIdle = status === "idle";
+  const isLoading = status === "loading";
+  const isError = status === "error";
+  const isSuccess = status === "success" && meal;
+
   return (
     <main className="app-shell">
       <header className="app-header">
         <div className="header-inner">
-          <div className="brand">
+          <button className="brand" onClick={handleGoHome} type="button">
             <span className="brand-mark">🍲</span>
             <span className="brand-name">Bey Meal Generator</span>
-          </div>
+          </button>
           <button className="btn btn-ghost" onClick={handleGenerateMeal} disabled={isLoading}>
             New meal
           </button>
@@ -85,7 +106,9 @@ function App() {
       </header>
 
       <main className="app-main">
-        {!meal && !isLoading && !error && (
+
+        {/* PHASE 1: IDLE / WELCOME SCREEN */}
+        {isIdle && (
           <section className="hero">
             <div className="hero-badge">Random recipe finder</div>
             <h1>What&apos;s cooking today?</h1>
@@ -99,6 +122,7 @@ function App() {
           </section>
         )}
 
+        {/* PHASE 2: LOADING */}
         {isLoading && (
           <section className="state-card">
             <div className="spinner" />
@@ -106,7 +130,8 @@ function App() {
           </section>
         )}
 
-        {error && (
+        {/* PHASE 3: ERROR */}
+        {isError && (
           <section className="state-card">
             <h2>Oops, something went wrong</h2>
             <p className="error-text">{error}</p>
@@ -116,7 +141,8 @@ function App() {
           </section>
         )}
 
-        {meal && !isLoading && (
+        {/* PHASE 4: SUCCESS / MEAL DISPLAY */}
+        {isSuccess && (
           <article className="meal-card">
             <div className="meal-image-wrap">
               {meal.image ? (
