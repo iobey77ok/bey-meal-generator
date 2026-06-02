@@ -16,6 +16,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   margin: 0;
   font-family: "Inter", system-ui, sans-serif;
@@ -57,21 +61,30 @@ textarea {
   gap: 16px;
 }
 
+
 .brand {
+  all: unset;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-width: 0;
+  gap: 8px;
 }
 
-.brand-mark {
-  font-size: 1.2rem;
+.brand-icon {
+  color: var(--primary);
 }
 
 .brand-name {
-  font-family: "Lora", Georgia, serif;
+  font-family: 'Lora', Georgia, serif;
+  font-weight: 600;
   font-size: 1.05rem;
-  font-weight: 700;
+  color: var(--foreground);
+  letter-spacing: -0.01em;
+}
+
+
+.brand-name:hover {
+  color: var(--primary);
 }
 
 .app-main {
@@ -106,11 +119,6 @@ textarea {
   margin-bottom: 18px;
 }
 
-.brand {
-  color: red;
-}
-
-
 .hero h1,
 .state-card h2,
 .meal-body h2 {
@@ -131,29 +139,37 @@ textarea {
   margin: 0 0 24px;
 }
 
-.meal-card {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 0;
-  overflow: hidden;
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.92);
-  box-shadow: var(--shadow);
-}
-
 .meal-image-wrap {
   position: relative;
-  min-height: 100%;
-  background: #f5ece0;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+}
+
+.meal-tags {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meal-tags span {
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .meal-image,
 .meal-image-placeholder {
   width: 100%;
   height: 100%;
-  min-height: 360px;
   object-fit: cover;
   display: block;
 }
@@ -174,29 +190,41 @@ textarea {
   font-weight: 600;
 }
 
-.meal-tags {
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 18px;
+.meal-card {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+
+  background: white;
+  box-shadow: var(--shadow);
+
+  animation: reveal 0.5s ease-out;
 }
 
-.meal-tags span {
-  background: rgba(28, 16, 6, 0.72);
-  color: #fff;
-  padding: 7px 12px;
-  border-radius: 999px;
-  font-size: 0.8rem;
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .meal-body {
-  padding: 28px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: 24px;
 }
 
 .meal-body h2 {
@@ -205,8 +233,8 @@ textarea {
 
 .meta-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
 }
 
 .meta-grid div,
@@ -360,5 +388,11 @@ textarea {
 
   .meal-body {
     padding: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .meta-grid {
+    grid-template-columns: 1fr;
   }
 }

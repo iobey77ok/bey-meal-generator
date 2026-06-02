@@ -1,6 +1,7 @@
 /* webpage logic/UI */
 
 import { useState } from "react";
+import * as Lucide from "lucide-react";
 
 // The base URL for our backend API. Kept outside the component because it's a global constant.
 const API_URL = "http://localhost:3000/meal/random";
@@ -96,7 +97,9 @@ function App() {
       <header className="app-header">
         <div className="header-inner">
           <button className="brand" onClick={handleGoHome} type="button">
-            <span className="brand-mark">🍲</span>
+            <span className="brand-icon">
+              <Lucide.UtensilsCrossed size={22} />
+            </span>
             <span className="brand-name">Bey Meal Generator</span>
           </button>
           <button className="btn btn-ghost" onClick={handleGenerateMeal} disabled={isLoading}>
