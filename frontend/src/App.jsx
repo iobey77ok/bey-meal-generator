@@ -220,18 +220,24 @@ function App() {
                       <Lucide.PlayCircle size={18} className="play-circle" />
                       Watch on YouTube
                     </span>
-
                     <Lucide.ExternalLink size={14} className="open-link" />
                   </a>
                 </section>
               )}
 
-              <button className="btn btn-primary" onClick={handleGenerateMeal}>
-                Generate another meal
-              </button>
             </div>
           </article>
         )}
+
+        {isSuccess && (
+          <div className="generate-another-wrap">
+            <button className="btn-generate-another" onClick={handleGenerateMeal}>
+              <Lucide.Shuffle size={16} />
+              <span>Generate another meal</span>
+            </button>
+          </div>
+        )}
+
       </main>
     </main>
   );

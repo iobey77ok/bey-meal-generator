@@ -120,15 +120,8 @@ textarea {
   margin-bottom: 18px;
 }
 
-.hero h1,
-.state-card h2,
-.meal-body h2 {
-  margin: 0;
-  line-height: 1.15;
-  margin-bottom: -33px !important;
-}
-
 .hero h1 {
+  font-family: var(--font-heading);
   font-size: 2.25rem;
   font-weight: 700;
   line-height: 1.2;
@@ -140,12 +133,6 @@ textarea {
   color: var(--muted);
   line-height: 1.7;
   margin: 0 0 24px;
-}
-
-.brand-name,
-.hero h1,
-.meal-body h2 {
-  font-family: var(--font-heading);
 }
 
 .meal-image-wrap {
@@ -243,17 +230,20 @@ textarea {
 }
 
 .meal-body {
-  padding: 24px 36px !important;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  padding: 12px 36px 32px 36px !important;
 }
 
 .meal-body h2 {
+  font-family: var(--font-heading);
   font-size: 1.75rem;
   font-weight: 700;
   line-height: 1.25;
   letter-spacing: -0.02em;
+  margin-bottom: -30px;
+  margin-top: 14px;
 }
 
 .meta-grid {
@@ -265,7 +255,7 @@ textarea {
 .meta-grid div {
   border: 1px solid var(--line);
   background: #fff;
-  border-radius: 14px;
+  border-radius: 10px;
 }
 
 .meta-grid div {
@@ -293,6 +283,7 @@ textarea {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--primary);
+  margin-top: 10px;
 }
 
 .ingredients-list {
@@ -360,7 +351,7 @@ textarea {
   padding: 14px 20px !important;
   background-color: var(--primary-soft);
   border: none;
-  border-radius: 14px !important;
+  border-radius: 10px !important;
   color: var(--text) !important;
   font-size: 0.88rem;
   font-weight: 500;
@@ -389,7 +380,7 @@ textarea {
 
 .btn {
   border: 0;
-  border-radius: 14px;
+  border-radius: 10px;
   padding: 12px 16px;
   cursor: pointer;
   font-weight: 700;
@@ -419,7 +410,7 @@ textarea {
 
   border: 1px solid rgba(140, 90, 40, 0.12);
 
-  border-radius: 14px;
+  border-radius: 10px;
 
   padding: 0.5rem 0.9rem;
 
@@ -441,6 +432,41 @@ textarea {
 .btn-lg {
   padding: 14px 20px;
 }
+
+.generate-another-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 32px;
+  margin-bottom: 48px;
+}
+
+.btn-generate-another {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px !important;
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+  font-size: 0.88rem !important;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(192, 94, 10, 0.15);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-generate-another:hover {
+  background-color: #a44f08 !important;
+  transform: translateY(-1px);
+}
+
+.btn-generate-another:active {
+  transform: translateY(0);
+}
+
 
 .spinner {
   width: 30px;
@@ -490,9 +516,7 @@ textarea {
     grid-template-columns: 1fr;
   }
 
-  .meal-body {
-    padding: 20px;
-  }
+
 }
 
 @media (max-width: 640px) {
