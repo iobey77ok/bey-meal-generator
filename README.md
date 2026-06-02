@@ -1,5 +1,7 @@
 # 🍳 Bey Meal Generator
 
+![project meal geneator](docs/images/meal.png)
+
 **Don’t know what to eat for your next meal?  
 Let Bey Meal Generator decide for you.**
 
