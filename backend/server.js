@@ -42,6 +42,32 @@ app.get("/", (request, response) => {
   });
 });
 
+
+/*
+Extract ingredients from a meal object.
+  TheMealDB API returns ingredients in a awkward format, 
+  with up to 20 ingredient/measure pairs as separate fields (strIngredient1, strMeasure1, 
+  strIngredient2, strMeasure2, etc.). This function loops through those fields and 
+  constructs a more convenient array of ingredient objects.
+*/
+function extractIngredients(meal) {
+  const ingredients = [];
+
+  for (let i = 1; i <= 20; i++) {
+    const ingredient = meal[`strIngredient${i}`];
+    const measure = meal[`strMeasure${i}`];
+
+    if (ingredient && ingredient.trim()) {
+      ingredients.push({
+        name: ingredient,
+        measure: measure || ""
+      });
+    }
+  }
+
+  return ingredients;
+}
+
 /*
 Random Meal Route
   GET http://localhost:3000/meal/random
@@ -58,8 +84,17 @@ app.get("/meal/random", async (request, response) => {
     response.json({
       id: meal.idMeal,
       name: meal.strMeal,
+
       category: meal.strCategory,
+      area: meal.strArea,
+
       image: meal.strMealThumb,
+
+      instructions: meal.strInstructions,
+      youtube: meal.strYoutube,
+
+      ingredients: extractIngredients(meal),
+
       protein: "-",
       fat: "-",
       sugar: "-"
