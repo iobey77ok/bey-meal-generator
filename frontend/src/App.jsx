@@ -177,11 +177,13 @@ function App() {
             <div className="meal-body">
               <h2>{meal.name}</h2>
 
-              <div className="meta-grid">
+
+              {/* <div className="meta-grid">
                 {meal.protein !== "" && <div><span>Protein</span><strong>{meal.protein}</strong></div>}
                 {meal.fat !== "" && <div><span>Fat</span><strong>{meal.fat}</strong></div>}
                 {meal.sugar !== "" && <div><span>Sugar</span><strong>{meal.sugar}</strong></div>}
-              </div>
+              </div> */}
+
 
               {Array.isArray(meal.ingredients) && meal.ingredients.length > 0 && (
                 <section className="section">
@@ -189,8 +191,11 @@ function App() {
                   <ul className="ingredients-list">
                     {meal.ingredients.map((item, index) => (
                       <li key={index}>
-                        <span>{item.name}</span>
-                        <span>{item.measure}</span>
+                        <span className="ingredient-name">
+                          <span className="ingredient-dot"></span>
+                          {item.name}
+                        </span>
+                        <span className="ingredient-measure">{item.measure}</span>
                       </li>
                     ))}
                   </ul>
@@ -210,9 +215,13 @@ function App() {
 
               {meal.youtube && (
                 <section className="section">
-                  <h3>YouTube Video</h3>
                   <a className="yt-link" href={meal.youtube} target="_blank" rel="noreferrer">
-                    Watch on YouTube
+                    <span className="yt-link-left">
+                      <Lucide.PlayCircle size={18} className="play-circle" />
+                      Watch on YouTube
+                    </span>
+
+                    <Lucide.ExternalLink size={14} className="open-link" />
                   </a>
                 </section>
               )}

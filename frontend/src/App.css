@@ -12,6 +12,7 @@
   --radius: 18px;
   --font-heading: 'Lora', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
+  --radius: 0.625rem;
 }
 
 * {
@@ -54,11 +55,11 @@ textarea {
 }
 
 .header-inner {
+  width: 100%;
   max-width: 760px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 50px;
   height: 56px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -124,6 +125,7 @@ textarea {
 .meal-body h2 {
   margin: 0;
   line-height: 1.15;
+  margin-bottom: -33px !important;
 }
 
 .hero h1 {
@@ -241,7 +243,7 @@ textarea {
 }
 
 .meal-body {
-  padding: 24px;
+  padding: 24px 36px !important;
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -260,8 +262,7 @@ textarea {
   gap: 12px;
 }
 
-.meta-grid div,
-.ingredients-list li {
+.meta-grid div {
   border: 1px solid var(--line);
   background: #fff;
   border-radius: 14px;
@@ -283,8 +284,12 @@ textarea {
 }
 
 .section h3 {
-  margin: 0 0 12px;
-  font-size: 0.82rem;
+  display: flex;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.7875rem;
+  line-height: 1.7;
+  gap: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--primary);
@@ -295,14 +300,44 @@ textarea {
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
 }
 
 .ingredients-list li {
-  padding: 12px 14px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
+  padding: 10px 16px;
+  background-color: var(--primary-soft);
+  border-radius: var(--radius);
+  border: none;
+}
+
+.ingredient-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--primary);
+  flex-shrink: 0;
+}
+
+.ingredient-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ingredient-measure {
+  font-size: 0.82rem;
+  color: var(--muted);
+  font-weight: 400;
+  white-space: nowrap;
 }
 
 .ingredients-list span:last-child {
@@ -312,19 +347,44 @@ textarea {
 
 .instructions p {
   margin: 0 0 12px;
+  font-size: 0.95rem;
   line-height: 1.7;
   color: #3c2a1a;
 }
 
 .yt-link {
-  display: inline-flex;
-  width: fit-content;
-  padding: 12px 16px;
-  border-radius: 14px;
-  background: #f6efe6;
-  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100% !important;
+  padding: 14px 20px !important;
+  background-color: var(--primary-soft);
+  border: none;
+  border-radius: 14px !important;
+  color: var(--text) !important;
+  font-size: 0.88rem;
+  font-weight: 500;
   text-decoration: none;
-  border: 1px solid var(--line);
+  transition: background-color 0.15s ease;
+}
+
+.yt-link:hover {
+  background-color: #fde6c7;
+  color: var(--text) !important;
+}
+
+.yt-link-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.play-circle {
+  color: var(--primary);
+}
+
+.open-link {
+  color: var(--muted);
 }
 
 .btn {
@@ -416,7 +476,6 @@ textarea {
 
 @media (max-width: 640px) {
 
-  .header-inner,
   .app-main {
     padding-left: 16px;
     padding-right: 16px;
