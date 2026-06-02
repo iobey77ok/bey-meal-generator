@@ -103,7 +103,8 @@ function App() {
             <span className="brand-name">Bey Meal Generator</span>
           </button>
           <button className="btn btn-ghost" onClick={handleGenerateMeal} disabled={isLoading}>
-            New meal
+            <Lucide.Shuffle size={16} />
+            <span>New meal</span>
           </button>
         </div>
       </header>
@@ -159,8 +160,17 @@ function App() {
                 <div className="meal-image-placeholder">No image</div>
               )}
               <div className="meal-tags">
-                {meal.category && <span>{meal.category}</span>}
-                {meal.area && <span>{meal.area}</span>}
+                {meal.category &&
+                  <span className="tag-category">
+                    <Lucide.ChefHat size={12} />
+                    {meal.category}
+                  </span>}
+
+                {meal.area &&
+                  <span className="tag-area">
+                    <Lucide.Globe size={12} />
+                    {meal.area}
+                  </span>}
               </div>
             </div>
 
