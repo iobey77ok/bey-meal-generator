@@ -5,6 +5,22 @@ import { useState } from "react";
 // send requests to this URL to get random meals from backend.
 const API_URL = "http://localhost:3000/meal/random";
 
+function normalizeMeal(data) {
+  return {
+    id: data.id ?? data.idMeal ?? "",
+    name: data.name ?? data.strMeal ?? "Unknown meal",
+    category: data.category ?? data.strCategory ?? "",
+    area: data.area ?? data.strArea ?? "",
+    image: data.image ?? data.strMealThumb ?? "",
+    instructions: data.instructions ?? data.strInstructions ?? "",
+    youtube: data.youtube ?? data.strYoutube ?? "",
+    ingredients: data.ingredients ?? [],
+    protein: data.protein ?? "",
+    fat: data.fat ?? "",
+    sugar: data.sugar ?? "",
+  };
+}
+
 function App() {
   /*
   meal stores the meal data from backend.
@@ -46,7 +62,7 @@ function App() {
       // If anything failed, clear meal and show error.
     } catch (requestError) {
       setMeal(null);
-      setError(requestError.message);
+      setError(err.message || "Something went wrong.");
       // Stop loading, whether success or error.
     } finally {
       setIsLoading(false);
@@ -55,63 +71,120 @@ function App() {
 
   // the UI that React shows. CSS decorates it.
   return (
-    <main className="app">
-      <section className="meal-panel" aria-labelledby="page-title">
-        <p className="eyebrow">Meal Generator</p>
-        <h1 id="page-title">Find a random meal </h1>
-        <p className="intro">
-          Click the button to request one meal from the Express API.
-        </p>
+    <main className="app-shell">
+      <header className="app-header">
+        <div className="header-inner">
+          <div className="brand">
+            <span className="brand-mark">🍲</span>
+            <span className="brand-name">Bey Meal Generator</span>
+          </div>
+          <button className="btn btn-ghost" onClick={handleGenerateMeal} disabled={isLoading}>
+            New meal
+          </button>
+        </div>
+      </header>
 
-        {/* When User Clicks Button, call handleGenerateMeal()*/}
-        <button onClick={handleGenerateMeal} disabled={isLoading}>
-          {isLoading ? "Generating..." : "Generate Meal"}
-        </button>
-
-        {error && <p className="error">{error}</p>}
+      <main className="app-main">
+        {!meal && !isLoading && !error && (
+          <section className="hero">
+            <div className="hero-badge">Random recipe finder</div>
+            <h1>What&apos;s cooking today?</h1>
+            <p>
+              Click generate to discover a random meal with picture, ingredients,
+              instructions, and video when available.
+            </p>
+            <button className="btn btn-primary btn-lg" onClick={handleGenerateMeal}>
+              Generate a Meal
+            </button>
+          </section>
+        )}
 
         {isLoading && (
-          <div className="loading-panel">
-            <div className="spinner"></div>
-            <p>Generating meal...</p>
-          </div>
+          <section className="state-card">
+            <div className="spinner" />
+            <p>Finding your next meal...</p>
+          </section>
         )}
 
-        {/* if meal has data, show meal result */}
+        {error && (
+          <section className="state-card">
+            <h2>Oops, something went wrong</h2>
+            <p className="error-text">{error}</p>
+            <button className="btn btn-primary" onClick={handleGenerateMeal}>
+              Try again
+            </button>
+          </section>
+        )}
+
         {meal && !isLoading && (
-          <div className="meal-result">
-            <img
-              src={meal.image}
-              alt={meal.name}
-              className="meal-image"
-              onLoad={() => setImageLoaded(true)}
-            />
+          <article className="meal-card">
+            <div className="meal-image-wrap">
+              {meal.image ? (
+                <img
+                  src={meal.image}
+                  alt={meal.name}
+                  className={imageLoaded ? "meal-image loaded" : "meal-image"}
+                  onLoad={() => setImageLoaded(true)}
+                />
+              ) : (
+                <div className="meal-image-placeholder">No image</div>
+              )}
+              <div className="meal-tags">
+                {meal.category && <span>{meal.category}</span>}
+                {meal.area && <span>{meal.area}</span>}
+              </div>
+            </div>
 
-            {/* Only show meal name and category after image has loaded, to avoid layout shift.*/}
-            {imageLoaded && (
-              <>
-                <h2>{meal.name}</h2>
-                <p className="category">{meal.category}</p>
-              </>
-            )}
+            <div className="meal-body">
+              <h2>{meal.name}</h2>
 
-            <dl className="nutrition-list">
-              <div>
-                <dt>Protein</dt>
-                <dd>{meal.protein}</dd>
+              <div className="meta-grid">
+                {meal.protein !== "" && <div><span>Protein</span><strong>{meal.protein}</strong></div>}
+                {meal.fat !== "" && <div><span>Fat</span><strong>{meal.fat}</strong></div>}
+                {meal.sugar !== "" && <div><span>Sugar</span><strong>{meal.sugar}</strong></div>}
               </div>
-              <div>
-                <dt>Fat</dt>
-                <dd>{meal.fat}</dd>
-              </div>
-              <div>
-                <dt>Sugar</dt>
-                <dd>{meal.sugar}</dd>
-              </div>
-            </dl>
-          </div>
+
+              {Array.isArray(meal.ingredients) && meal.ingredients.length > 0 && (
+                <section className="section">
+                  <h3>Ingredients</h3>
+                  <ul className="ingredients-list">
+                    {meal.ingredients.map((item, index) => (
+                      <li key={index}>
+                        <span>{item.name}</span>
+                        <span>{item.measure}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {meal.instructions && (
+                <section className="section">
+                  <h3>Instructions</h3>
+                  <div className="instructions">
+                    {meal.instructions.split(/\r?\n/).map((line, index) =>
+                      line.trim() ? <p key={index}>{line.trim()}</p> : null
+                    )}
+                  </div>
+                </section>
+              )}
+
+              {meal.youtube && (
+                <section className="section">
+                  <h3>YouTube Video</h3>
+                  <a className="yt-link" href={meal.youtube} target="_blank" rel="noreferrer">
+                    Watch on YouTube
+                  </a>
+                </section>
+              )}
+
+              <button className="btn btn-primary" onClick={handleGenerateMeal}>
+                Generate another meal
+              </button>
+            </div>
+          </article>
         )}
-      </section>
+      </main>
     </main>
   );
 }
