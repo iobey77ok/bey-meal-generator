@@ -28,6 +28,7 @@ const __dirname = path.dirname(__filename);
 const mealsFilePath = path.join(__dirname, "data", "meals.json");
 
 // CORS lets the React app on a different port request data from this API.
+const cors = require('cors');
 app.use(cors());
 
 
