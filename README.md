@@ -81,7 +81,19 @@ The project is currently running in a local environment while free tier static/c
   - [ ] Expand scope to support Global Beverages and Mixology recipes
   - [ ] Implement smart dietary filter tags: **Clean Eating / Plant-Based Alternatives / Dairy-Free Options**
 
+## 🐳 How to Run with Docker (Recommended)
 
+You can run the entire full-stack application (both Frontend and Backend) automatically using Docker and Docker Compose.
+
+### Prerequisites
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and running.
+
+### Setup and Start
+1. Open your terminal at the project root directory.
+2. Run the following command to build and start the containers:
+   ```bash
+   docker compose up --build
+   ```
 
 ## 💻 Local Installation & Setup
 
