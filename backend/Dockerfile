@@ -6,6 +6,10 @@ WORKDIR /app
 
 # 3. Copy package files and install dependencies
 COPY package*.json ./
+
+# Add curl for healthcheck 
+RUN apk add --no-cache curl
+
 RUN npm install
 
 # 4. Copy the rest of your backend code

@@ -5,6 +5,13 @@ services:
     build: ./backend
     ports:
       - "3000:3000"
+    
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s    # check every 10 seconds
+      timeout: 5s      # if it takes more than 5 seconds to respond, consider it a failure
+      retries: 3       # if it fails 3 times in a row, mark it as unhealthy
+      start_period: 5s # give the app 5 seconds to start before checking its status
 
   frontend:
     build: ./frontend

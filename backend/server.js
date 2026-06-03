@@ -108,6 +108,11 @@ app.get("/meal/random", async (request, response) => {
   }
 });
 
+/* Healthcheck Endpoint for docker or 
+  monitoring tools to verify the API is running and responsive.*/
+app.get('/health', (req, response) => {
+  response.status(200).json({ status: 'UP', timestamp: new Date() });
+});
 
 // Starts backend at port 3000 we defined above
 app.listen(PORT, () => {
