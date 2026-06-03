@@ -5,7 +5,7 @@ import * as Lucide from "lucide-react";
 
 // The base URL for our backend API. Kept outside the component because it's a global constant.
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-const API_URL = `${API_BASE_URL}/mealrandom`;
+const API_URL = `${API_BASE_URL}/meal/random`;
 
 
 /**
