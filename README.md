@@ -25,6 +25,10 @@ This project was built as a learning experience:
 - Transforming inconsistent API responses into clean UI-friendly data
 - Managing React state and component structure
 - Improving UI layout, spacing, and visual hierarchy (a lot of CSS debugging 😄)
+- **Multi-Container Architecture:** Split the application into isolated Frontend (Vite) and Backend (Express) containers, managing networking and port mapping.
+- **Container Health Monitoring (Healthchecks):** Implemented an automated health check system using Express endpoints and Docker `curl` probes to monitor API uptime, I believe it would be a great fundamental concept for production-grade self-healing systems.
+- **Hot Reload:** Configured Docker Volumes with file-polling mechanisms to sync local code changes into containers in real-time without restarting the environment.
+
 
 ## 🛠️ Tech Stack
 
@@ -35,6 +39,9 @@ This project marks a milestone of exploring completely new technologies, buildin
 - **Styling:** Vanilla CSS (custom design system)
 - **API:** TheMealDB
 - **Icons:** Lucide React
+### DevOps & Infrastructure
+- **Docker:** Containerization for consistent development and production environments.
+- **Docker Compose:** Multi-container orchestration to manage Frontend and Backend services simultaneously.
 
 
 ## 📸 Project Gallery & Visual Artbook
