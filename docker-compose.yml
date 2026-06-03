@@ -6,6 +6,10 @@ services:
     ports:
       - "3000:3000"
     
+    volumes:
+      - ./backend:/app # Mount the backend directory to /app in the container
+      - /app/node_modules # Prevent overwriting node_modules with host's empty directory
+  
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 10s    # check every 10 seconds
@@ -17,5 +21,16 @@ services:
     build: ./frontend
     ports:
       - "5173:5173"
+    
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
     depends_on:
       - backend
+
+      # let the frontend folder on our real machine 
+      # be mounted to /app inside the container in real-time. 
+      # The separate line for node_modules is telling Docker 
+      # "don't mount node_modules from the host into the container 
+      # because it needs to use the Linux version inside there."
