@@ -2,41 +2,12 @@
 
 import { useState } from "react";
 import * as Lucide from "lucide-react";
-
-// The base URL for our backend API. Kept outside the component because it's a global constant.
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-const API_URL = `${API_BASE_URL}/meal/random`;
-
-
-/**
- * DATA NORMALIZER: Standardizes the meal data format.
- * * Why we need this: 
- * Our app gets data from two places: our local JSON file (uses 'name', 'image') 
- * and TheMealDB API (uses 'strMeal', 'strMealThumb'). 
- * * This function translates both styles into a single, reliable object structure 
- * so our frontend UI code stays clean and never breaks due to missing fields.
- */
-function normalizeMeal(data) {
-  return {
-    // Read this as: Use data.id if it exists. 
-    // If not, try data.idMeal. 
-    // If that doesn't exist either, fall back to an empty string "".
-    id: data.id ?? data.idMeal ?? "",
-    name: data.name ?? data.strMeal ?? "Unknown meal",
-    category: data.category ?? data.strCategory ?? "",
-    area: data.area ?? data.strArea ?? "",
-    image: data.image ?? data.strMealThumb ?? "",
-    instructions: data.instructions ?? data.strInstructions ?? "",
-    youtube: data.youtube ?? data.strYoutube ?? "",
-    ingredients: data.ingredients ?? [],
-    protein: data.protein ?? "",
-    fat: data.fat ?? "",
-    sugar: data.sugar ?? "",
-  };
-}
+import { mealApi } from "./services/mealApi";
 
 function App() {
   // Core Data States
+  // useState is a React Hook that lets you add state to functional components.
+  // Example: meal holds the current meal data, and setMeal is the function to update it.
   const [meal, setMeal] = useState(null);
   const [error, setError] = useState("");
 
@@ -60,16 +31,12 @@ function App() {
     setError("");
 
     try {
-      const response = await fetch(API_URL);
+      const nextMeal = await mealApi.getRandomMeal();
 
-      if (!response.ok) {
-        throw new Error("The server could not generate a meal.");
-      }
-
-      const data = await response.json();
-
-      setImageLoaded(false); // Reset image visibility trigger for the new asset
-      setMeal(normalizeMeal(data)); // Normalize ensures the object shape matches expectations perfectly
+      // Reset image visibility trigger for the new asset
+      setImageLoaded(false);
+      // Update meal data and transition to success state
+      setMeal(nextMeal);
       setStatus("success");
     } catch (requestError) {
       setMeal(null);
