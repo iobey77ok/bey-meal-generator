@@ -5,14 +5,14 @@
   --panel: #ffffff;
   --text: #1c1006;
   --muted: #8a6a4a;
-  --line: rgba(140, 90, 40, 0.15);
+  --line-rgb: 140, 90, 40;
+  --line: rgba(var(--line-rgb), 0.15);
   --primary: #c05e0a;
   --primary-soft: #fef0dc;
   --shadow: 0 20px 50px rgba(60, 30, 0, 0.08);
-  --radius: 18px;
+  --radius: 0.625rem;
   --font-heading: 'Lora', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
-  --radius: 0.625rem;
 }
 
 * {
@@ -255,10 +255,7 @@ textarea {
 .meta-grid div {
   border: 1px solid var(--line);
   background: #fff;
-  border-radius: 10px;
-}
-
-.meta-grid div {
+  border-radius: var(--radius);
   padding: 14px;
 }
 
@@ -351,7 +348,7 @@ textarea {
   padding: 14px 20px !important;
   background-color: var(--primary-soft);
   border: none;
-  border-radius: 10px !important;
+  border-radius: var(--radius) !important;
   color: var(--text) !important;
   font-size: 0.88rem;
   font-weight: 500;
@@ -380,7 +377,7 @@ textarea {
 
 .btn {
   border: 0;
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 12px 16px;
   cursor: pointer;
   font-weight: 700;
@@ -408,9 +405,9 @@ textarea {
 
   background: rgba(255, 255, 255, 0.45);
 
-  border: 1px solid rgba(140, 90, 40, 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
 
-  border-radius: 10px;
+  border-radius: var(--radius);
 
   padding: 0.5rem 0.9rem;
 
@@ -426,7 +423,7 @@ textarea {
 
 .btn-ghost:hover {
   background-color: #f5ece0;
-  border-color: rgba(140, 90, 40, 0.3);
+  border-color: rgba(var(--line-rgb), 0.3);
 }
 
 .btn-lg {
@@ -449,7 +446,7 @@ textarea {
   padding: 12px 24px !important;
   background-color: var(--primary) !important;
   color: #ffffff !important;
-  border-radius: 10px !important;
+  border-radius: var(--radius) !important;
   font-size: 0.88rem !important;
   font-weight: 600;
   border: none;
@@ -490,10 +487,6 @@ textarea {
 }
 
 @media (max-width: 900px) {
-  .meal-card {
-    grid-template-columns: 1fr;
-  }
-
   .meal-image,
   .meal-image-placeholder {
     min-height: 280px;
@@ -501,7 +494,6 @@ textarea {
 }
 
 @media (max-width: 640px) {
-
   .app-main {
     padding-left: 16px;
     padding-right: 16px;
@@ -512,14 +504,6 @@ textarea {
     padding: 32px 20px;
   }
 
-  .meta-grid {
-    grid-template-columns: 1fr;
-  }
-
-
-}
-
-@media (max-width: 640px) {
   .meta-grid {
     grid-template-columns: 1fr;
   }
