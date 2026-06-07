@@ -13,6 +13,14 @@ import * as Lucide from "lucide-react";
 // them means the state machine can be unit-tested without rendering JSX, and
 // this file can focus purely on "given this state, show this UI".
 import { useMealGenerator, Status } from "./hooks/useMealGenerator";
+// Each UI phase now lives in its own file under components/. App's render
+// becomes "pick the component that matches the current status" — adding a
+// 5th phase later (e.g. "no meals match this filter") means adding one more
+// file and one more line below; it can't break the markup of the other four.
+import Hero from "./components/Hero";
+import LoadingState from "./components/LoadingState";
+import ErrorState from "./components/ErrorState";
+import MealCard from "./components/MealCard";
 
 function App() {
   const {
@@ -51,134 +59,20 @@ function App() {
       </header>
 
       <main className="app-main">
+        {isIdle && <Hero onGenerate={generateMeal} />}
 
-        {/* PHASE 1: IDLE / WELCOME SCREEN */}
-        {isIdle && (
-          <section className="hero">
-            <div className="hero-badge">Random recipe finder</div>
-            <h1>What&apos;s cooking today?</h1>
-            <p>
-              Click generate to discover a random meal with picture, ingredients,
-              instructions, and video when available.
-            </p>
-            <button className="btn btn-primary btn-lg" onClick={generateMeal}>
-              Generate a Meal
-            </button>
-          </section>
-        )}
+        {isLoading && <LoadingState />}
 
-        {/* PHASE 2: LOADING */}
-        {isLoading && (
-          <section className="state-card">
-            <div className="spinner" />
-            <p>Finding your next meal...</p>
-          </section>
-        )}
-
-        {/* PHASE 3: ERROR */}
-        {isError && (
-          <section className="state-card">
-            <h2>Oops, something went wrong</h2>
-            <p className="error-text">{error}</p>
-            <button className="btn btn-primary" onClick={generateMeal}>
-              Try again
-            </button>
-          </section>
-        )}
-
-        {/* PHASE 4: SUCCESS / MEAL DISPLAY */}
-        {isSuccess && (
-          <article className="meal-card">
-            <div className="meal-image-wrap">
-              {meal.image ? (
-                <img
-                  src={meal.image}
-                  alt={meal.name}
-                  className={imageLoaded ? "meal-image loaded" : "meal-image"}
-                  onLoad={markImageLoaded}
-                />
-              ) : (
-                <div className="meal-image-placeholder">No image</div>
-              )}
-              <div className="meal-tags">
-                {meal.category &&
-                  <span className="tag-category">
-                    <Lucide.ChefHat size={12} />
-                    {meal.category}
-                  </span>}
-
-                {meal.area &&
-                  <span className="tag-area">
-                    <Lucide.Globe size={12} />
-                    {meal.area}
-                  </span>}
-              </div>
-            </div>
-
-            <div className="meal-body">
-              <h2>{meal.name}</h2>
-
-
-              {/* <div className="meta-grid">
-                {meal.protein !== "" && <div><span>Protein</span><strong>{meal.protein}</strong></div>}
-                {meal.fat !== "" && <div><span>Fat</span><strong>{meal.fat}</strong></div>}
-                {meal.sugar !== "" && <div><span>Sugar</span><strong>{meal.sugar}</strong></div>}
-              </div> */}
-
-
-              {Array.isArray(meal.ingredients) && meal.ingredients.length > 0 && (
-                <section className="section">
-                  <h3>Ingredients</h3>
-                  <ul className="ingredients-list">
-                    {meal.ingredients.map((item, index) => (
-                      <li key={index}>
-                        <span className="ingredient-name">
-                          <span className="ingredient-dot"></span>
-                          {item.name}
-                        </span>
-                        <span className="ingredient-measure">{item.measure}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              )}
-
-              {meal.instructions && (
-                <section className="section">
-                  <h3>Instructions</h3>
-                  <div className="instructions">
-                    {meal.instructions.split(/\r?\n/).map((line, index) =>
-                      line.trim() ? <p key={index}>{line.trim()}</p> : null
-                    )}
-                  </div>
-                </section>
-              )}
-
-              {meal.youtube && (
-                <section className="section">
-                  <a className="yt-link" href={meal.youtube} target="_blank" rel="noreferrer">
-                    <span className="yt-link-left">
-                      <Lucide.PlayCircle size={18} className="play-circle" />
-                      Watch on YouTube
-                    </span>
-                    <Lucide.ExternalLink size={14} className="open-link" />
-                  </a>
-                </section>
-              )}
-
-            </div>
-          </article>
-        )}
+        {isError && <ErrorState message={error} onRetry={generateMeal} />}
 
         {isSuccess && (
-          <div className="generate-another-wrap">
-            <button className="btn-generate-another" onClick={generateMeal}>
-              <Lucide.Shuffle size={16} />
-              <span>Generate another meal</span>
-            </button>
-          </div>
+          <MealCard
+            meal={meal}
+            imageLoaded={imageLoaded}
+            onImageLoad={markImageLoaded}
+            onGenerateAnother={generateMeal}
+          />
         )}
-
       </main>
     </main>
   );
