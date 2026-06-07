@@ -1,77 +1,49 @@
 /* webpage logic/UI */
 
-import { useState } from "react";
 import * as Lucide from "lucide-react";
-import { mealApi } from "./services/mealApi";
+// The "what's the current meal / what state are we in / how do we change it"
+// brain now lives in this hook (hooks/useMealGenerator.js), built on top of
+// mealApi from the previous step. App used to own four useState calls plus
+// two handler functions for this — now it just asks the hook for the current
+// values and the two actions it can trigger (generateMeal, goHome).
+//
+// Why move it out: that state-machine logic doesn't care *how* it's
+// rendered, and the rendering below doesn't care *how* status changes —
+// they're two separate concerns that were tangled in one function. Splitting
+// them means the state machine can be unit-tested without rendering JSX, and
+// this file can focus purely on "given this state, show this UI".
+import { useMealGenerator, Status } from "./hooks/useMealGenerator";
 
 function App() {
-  // Core Data States
-  // useState is a React Hook that lets you add state to functional components.
-  // Example: meal holds the current meal data, and setMeal is the function to update it.
-  const [meal, setMeal] = useState(null);
-  const [error, setError] = useState("");
+  const {
+    meal,
+    error,
+    status,
+    imageLoaded,
+    markImageLoaded,
+    generateMeal,
+    goHome,
+  } = useMealGenerator();
 
-  /**
-   * SOLID Design Principle: UI Status State Machine
-   * Instead of multiple booleans (isLoading, isError) which can conflict, we use a single string.
-   * Allowed values: 'idle' (welcome screen), 'loading', 'error', 'success'.
-   */
-  const [status, setStatus] = useState("idle");
-
-  // Tracks visual state of the image asset specifically
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  /**
-   * Orchestrates the API workflow. 
-   * Designed to be highly extensible: if you want to support filters or searches later,
-   * you can easily add parameters to this function.
-   */
-  async function handleGenerateMeal() {
-    setStatus("loading");
-    setError("");
-
-    try {
-      const nextMeal = await mealApi.getRandomMeal();
-
-      // Reset image visibility trigger for the new asset
-      setImageLoaded(false);
-      // Update meal data and transition to success state
-      setMeal(nextMeal);
-      setStatus("success");
-    } catch (requestError) {
-      setMeal(null);
-      setError(requestError.message || "Something went wrong.");
-      setStatus("error");
-    }
-  }
-
-  /**
-   * Clear all states to cleanly reset the view machine back to the homepage.
-   */
-  function handleGoHome() {
-    setMeal(null);
-    setError("");
-    setImageLoaded(false);
-    setStatus("idle");
-  }
-
-  // Convenient derived flags to keep our JSX clean and highly readable
-  const isIdle = status === "idle";
-  const isLoading = status === "loading";
-  const isError = status === "error";
-  const isSuccess = status === "success" && meal;
+  // Convenient derived flags to keep our JSX clean and highly readable.
+  // Compared against Status.* constants (not raw strings) so a typo here
+  // would be a ReferenceError, not a silently-blank screen.
+  const isIdle = status === Status.IDLE;
+  const isLoading = status === Status.LOADING;
+  const isError = status === Status.ERROR;
+  const isSuccess = status === Status.SUCCESS && meal;
 
   return (
     <main className="app-shell">
       <header className="app-header">
         <div className="header-inner">
-          <button className="brand" onClick={handleGoHome} type="button">
+          <button className="brand" onClick={goHome} type="button">
             <span className="brand-icon">
               <Lucide.UtensilsCrossed size={22} />
             </span>
             <span className="brand-name">Bey Meal Generator</span>
           </button>
-          <button className="btn btn-ghost" onClick={handleGenerateMeal} disabled={isLoading}>
+          <button className="btn btn-ghost" onClick={generateMeal} disabled={isLoading}>
             <Lucide.Shuffle size={16} />
             <span>New meal</span>
           </button>
@@ -89,7 +61,7 @@ function App() {
               Click generate to discover a random meal with picture, ingredients,
               instructions, and video when available.
             </p>
-            <button className="btn btn-primary btn-lg" onClick={handleGenerateMeal}>
+            <button className="btn btn-primary btn-lg" onClick={generateMeal}>
               Generate a Meal
             </button>
           </section>
@@ -108,7 +80,7 @@ function App() {
           <section className="state-card">
             <h2>Oops, something went wrong</h2>
             <p className="error-text">{error}</p>
-            <button className="btn btn-primary" onClick={handleGenerateMeal}>
+            <button className="btn btn-primary" onClick={generateMeal}>
               Try again
             </button>
           </section>
@@ -123,7 +95,7 @@ function App() {
                   src={meal.image}
                   alt={meal.name}
                   className={imageLoaded ? "meal-image loaded" : "meal-image"}
-                  onLoad={() => setImageLoaded(true)}
+                  onLoad={markImageLoaded}
                 />
               ) : (
                 <div className="meal-image-placeholder">No image</div>
@@ -200,7 +172,7 @@ function App() {
 
         {isSuccess && (
           <div className="generate-another-wrap">
-            <button className="btn-generate-another" onClick={handleGenerateMeal}>
+            <button className="btn-generate-another" onClick={generateMeal}>
               <Lucide.Shuffle size={16} />
               <span>Generate another meal</span>
             </button>
